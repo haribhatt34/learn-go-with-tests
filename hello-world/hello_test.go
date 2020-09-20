@@ -10,3 +10,9 @@ func TestHello(t *testing.T) {
 		t.Errorf("got %q want %q", got, want)
 	}
 }
+
+func Benchmark(b *testing.B) {
+	for i := 1; i <= b.N; i++ {
+		Hello("Chris")
+	}
+}

@@ -2,8 +2,12 @@ package main
 
 import "fmt"
 
+// using const
+const englishHelloPrefix = "Hello, "
+
+// Hello returns greeting.
 func Hello(name string) string {
-	return "Hello, " + name
+	return englishHelloPrefix + name
 }
 
 func main() {
