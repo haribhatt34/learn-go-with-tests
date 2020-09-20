@@ -2,24 +2,33 @@ package main
 
 import "testing"
 
+/* In go we can declare functions inside other functions and assign them to variable.
+* We pass t to assertCorrectMessage to tell test code to fail when we need to.
+* t.Helper() tell the test suite that this method is a helper. So,
+* when test fail, it will point to the actual sub-test line where error occured.
+* to see this try to fail the test case.
+ */
+
 func TestHello(t *testing.T) {
 
-	// below are two subtests.
-	t.Run("saying hello to people", func(t *testing.T) {
-		got := Hello("Chris")
-		want := "Hello, Chris"
-
+	assertCorrectMessage := func(t *testing.T, got, want string) {
+		//		t.Helper()
 		if got != want {
 			t.Errorf("got %q want %q", got, want)
 		}
+	}
+
+	// below are two subtests.
+	// syntax (name, func)
+	t.Run("saying hello to people", func(t *testing.T) {
+		got := Hello("Chris")
+		want := "Hello, Chris"
+		assertCorrectMessage(t, got, want)
 	})
 
 	t.Run("say 'Hello, World' when an empty string is supplied", func(t *testing.T) {
 		got := Hello("")
 		want := "Hello, World"
-
-		if got != want {
-			t.Errorf("got %q want %q", got, want)
-		}
+		assertCorrectMessage(t, got, want)
 	})
 }
