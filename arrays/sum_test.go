@@ -1,6 +1,9 @@
 package arrays
 
-import "testing"
+import (
+	"reflect"
+	"testing"
+)
 
 // Test Coverage -
 // go test -cover.
@@ -8,7 +11,7 @@ import "testing"
 
 func TestSum(t *testing.T) {
 
-	//array
+	//slice
 	t.Run("collection of 5 numbers", func(t *testing.T) {
 		numbers := []int{1, 2, 3, 4, 5}
 		got := Sum(numbers)
@@ -27,4 +30,27 @@ func TestSum(t *testing.T) {
 			t.Errorf("got %d want %d given %v", got, want, numbers)
 		}
 	})
+}
+
+func TestSumAll(t *testing.T) {
+	got := SumAll([]int{1, 2, 3}, []int{2, 3})
+	want := []int{6, 5}
+
+	// we cannot compare two slices a, b as a == b.
+	// we have to compare them one by one.
+	// or we can also use reflect.DeepEqual but it is not type safe,
+	// i.e. it will not throw error if we compare say string with int.
+
+	if !reflect.DeepEqual(got, want) {
+		t.Errorf("got %v want %v", got, want)
+	}
+}
+
+func TestSumAllTails(t *testing.T) {
+	got := SumAllTails([]int{1, 2, 3}, []int{2, 3})
+	want := []int{5, 3}
+
+	if !reflect.DeepEqual(got, want) {
+		t.Errorf("got %v want %v", got, want)
+	}
 }
