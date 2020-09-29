@@ -1,5 +1,7 @@
 package pointers
 
+import "errors"
+
 // Bitcoin add domain functionality on existing int type.
 type Bitcoin int
 
@@ -8,11 +10,23 @@ type Wallet struct {
 	balance Bitcoin
 }
 
-// Deposit the amount into wallet
+// Deposit amount into wallet
 func (w *Wallet) Deposit(amount Bitcoin) {
 	// Below is also correct
 	// (*w).balance += amount
 	w.balance += amount
+}
+
+// ErrInsufficientFunds contains error message
+var ErrInsufficientFunds = errors.New("can't withdraw, insufficient funds")
+
+// Withdraw amount from wallet
+func (w *Wallet) Withdraw(amount Bitcoin) error {
+	if amount > w.balance {
+		return ErrInsufficientFunds
+	}
+	w.balance -= amount
+	return nil
 }
 
 // Balance return the amount in wallet
@@ -51,4 +65,11 @@ func (w *Wallet) Balance() Bitcoin {
  * Above creates a new type 'Bitcoin', we can declare methods on it,
  * which adds functionality specific to this type like 'deposit', 'withdraw'.
  *
+ * 8)
+ * Cannot compare to errors.New() as each new call to New() method a new value
+ * even if the text is same.
+ * Call to errors.New() returns an error object.
+ *
+ * 9)
+ * The 'var' keyword allows us to define values global to the package.
  */
