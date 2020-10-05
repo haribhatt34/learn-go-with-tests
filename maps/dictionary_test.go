@@ -89,6 +89,63 @@ func TestAdd(t *testing.T) {
 	})
 }
 
+func TestUpdate(t *testing.T) {
+
+	assertError := func(t *testing.T, got, want error) {
+		t.Helper()
+		if got != want {
+			t.Errorf("got %q want %q", got, want)
+		}
+	}
+
+	assertDefinition := func(t *testing.T, word, definition string, dictionary Dictionary) {
+		t.Helper()
+		got := definition
+		want := dictionary[word]
+
+		if got != want {
+			t.Errorf("got %q want %q", got, want)
+		}
+	}
+
+	t.Run("existing word", func(t *testing.T) {
+		word := "test"
+		definition := "this is just a test"
+		dictionary := Dictionary{word: definition}
+		newdefinition := "this is a new test"
+		err := dictionary.Update(word, newdefinition)
+
+		assertError(t, err, nil)
+		assertDefinition(t, word, newdefinition, dictionary)
+	})
+
+	t.Run("new word", func(t *testing.T) {
+		dictionary := Dictionary{}
+		word := "test"
+		definition := "this is just a test"
+		err := dictionary.Update(word, definition)
+
+		assertError(t, err, ErrWordDoesNotExist)
+		// We will not assert definition, because word should not be
+		// entered in the dictionary, as it is a new word
+		//assertDefinition(t, word, definition, dictionary)
+	})
+}
+
+func TestDelete(t *testing.T) {
+
+	word := "test"
+	definition := "this is just a test"
+	dictionary := Dictionary{word: definition}
+	dictionary.Delete(word)
+
+	_, err := dictionary.Search(word)
+
+	if err != ErrNotFound {
+		t.Errorf("got %q to be deleted", word)
+	}
+}
+
 // Notes :
 /*
  *  1)
@@ -145,5 +202,10 @@ func TestAdd(t *testing.T) {
  *  var mp := map[string] int {} // an empty map
  *  The above declaration is same as make(mp[string] int)
  *  var mp := map[string] int {"hari", 1} // map initialized with value
+ *
+ * Go has inbuilt support for delete.
+ * It does not return anything.
+ * That's why unlike add, update we are not returning anything
+ * while deleting a key.
  *
  */
